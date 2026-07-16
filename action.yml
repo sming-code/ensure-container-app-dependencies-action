@@ -28,4 +28,4 @@ runs:
       template: ${{ github.action_path }}/bicep/create-database.bicep
       deploymentName: 'create-${{ env.sql-database-name }}'
       scope: resourcegroup
-      parameters: environment_resource_group_name=${{ env.environment-resource-group-name }} database_name=${{ env.sql-database-name }} server_name=${{ env.sql-server-name }} container_app_principal_id=${{ steps.container-app-principal-id.outputs.principal-id }}
+      parameters: database_name=${{ env.sql-database-name }} server_name=${{ env.sql-server-name }}

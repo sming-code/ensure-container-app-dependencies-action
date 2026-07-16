@@ -1,9 +1,5 @@
 param database_name string
 param server_name string
-param environment_resource_group_name string
-
-@secure()
-param container_app_principal_id string
 
 resource database_server 'Microsoft.Sql/servers@2025-02-01-preview' = {
   name: server_name
