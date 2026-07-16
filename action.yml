@@ -1,0 +1,31 @@
+name: Ensure container app dependencies
+description: 'Deploy container app associated resources to azure'
+
+runs:
+  using: "composite"
+  steps:
+  - name: ensure-resource-group
+    if: ${{ env.resource-group-exists == 0 }}
+    shell: bash
+    run: |
+      az group create -n ${{ env.resource-group-name }} -l uksouth --subscription ${{ env.subscription }}
+
+  - name: ensure-app-insights-exists
+    if: ${{ env.app-insights-exists == 0 }}
+    uses: azure/arm-deploy@v2
+    with:
+      resourceGroupName: ${{ env.resource-group-name }}
+      template: ${{ github.action_path }}/bicep/create-app-insights.bicep
+      deploymentName: 'deploy-${{ env.app-insights-name }}'
+      scope: resourcegroup
+      parameters: log_analytics_workspace_name=${{ env.log-analytics-workspace-name }} log_analytics_resource_group_name=${{ env.environment-resource-group-name }} app_insights_name=${{ env.app-insights-name }}
+
+  - name: ensure-sql-database-exists
+    if: ${{ env.sql-database-exists == 0 }}
+    uses: azure/arm-deploy@v2
+    with:
+      resourceGroupName: ${{ env.environment-resource-group-name }}
+      template: ${{ github.action_path }}/bicep/create-database.bicep
+      deploymentName: 'create-${{ env.sql-database-name }}'
+      scope: resourcegroup
+      parameters: environment_resource_group_name=${{ env.environment-resource-group-name }} database_name=${{ env.sql-database-name }} server_name=${{ env.sql-server-name }} container_app_principal_id=${{ steps.container-app-principal-id.outputs.principal-id }}
