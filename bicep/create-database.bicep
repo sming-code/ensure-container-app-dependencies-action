@@ -18,7 +18,7 @@ resource sql_database 'Microsoft.Sql/servers/databases@2025-02-01-preview' = {
   }
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'
-    maxSizeBytes: 34359738368
+    maxSizeBytes: 2147483648
     elasticPoolId: '${database_server.id}/elasticPools/${elastic_pool_name}'
     catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
     zoneRedundant: false
