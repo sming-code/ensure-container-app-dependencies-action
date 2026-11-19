@@ -1,5 +1,6 @@
 param database_name string
 param server_name string
+param elastic_pool_name string
 
 resource database_server 'Microsoft.Sql/servers@2025-02-01-preview' = {
   name: server_name
@@ -11,14 +12,14 @@ resource sql_database 'Microsoft.Sql/servers/databases@2025-02-01-preview' = {
   name: database_name
   location: 'uksouth'
   sku: {
-    name: 'GP_S_Gen5_1'
-    tier: 'GeneralPurpose'
-    family: 'Gen5'
-    capacity: 1
+    name: 'ElasticPool'
+    tier: 'Basic'
+    capacity: 0
   }
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'
     maxSizeBytes: 34359738368
+    elasticPoolId: '${database_server.id}/elasticPools/${elastic_pool_name}'
     catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
     zoneRedundant: false
     readScale: 'Disabled'
